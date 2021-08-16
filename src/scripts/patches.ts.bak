@@ -1,5 +1,6 @@
-import TurnAlertConfig from "../apps/TurnAlertConfig.js";
-import CONST from "./const.js";
+import TurnAlertConfig from "./apps/TurnAlertConfig.js";
+import { i18n } from "../turn-alert.js";
+import { getGame, TURN_ALERT_MODULE_NAME } from "./settings.js";
 
 /**
  * Patches CombatTracker#activateListeners to allow players to access
@@ -12,7 +13,9 @@ export function patch_CombatTracker_activateListeners() {
 
         // The existing activateListeners already adds the context menu
         // for GMs so we only need to add it for non-GMs here.
-        if (!game.user.isGM) this._contextMenu(html);
+        if (!getGame().user?.isGM){
+          this._contextMenu(html);
+        }
     };
 }
 
@@ -22,12 +25,12 @@ export function patch_CombatTracker_activateListeners() {
 export function patch_CombatTracker_getEntryContextOptions() {
     const old = CombatTracker.prototype._getEntryContextOptions;
     CombatTracker.prototype._getEntryContextOptions = function () {
-        const entries = game.user.isGM ? old.call(this) : [];
+        const entries = getGame().user?.isGM ? old.call(this) : [];
         entries.unshift({
-            name: game.i18n.localize(`${CONST.moduleName}.APP.AddAlert`),
+            name: i18n(`${TURN_ALERT_MODULE_NAME}.APP.AddAlert`),
             icon: '<i class="fas fa-bell"></i>',
             condition: (li) => {
-                return game.combat?.combatants?.get(li.data("combatant-id"))?.isOwner;
+                return getGame().combat?.combatants?.get(li.data("combatant-id"))?.isOwner;
             },
             callback: (li) => {
                 const alertData = {

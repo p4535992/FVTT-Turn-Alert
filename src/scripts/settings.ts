@@ -3,6 +3,8 @@ import { DND5E } from "../../../systems/dnd5e/module/config.js";
 
 export const TURN_ALERT_MODULE_NAME = "turnAlert";
 
+export const TURN_ALERT_SOCKET_NAME = "module.turnAlert";
+
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
  * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.

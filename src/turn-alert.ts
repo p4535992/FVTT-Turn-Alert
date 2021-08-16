@@ -12,11 +12,10 @@
 // Import JavaScript modules
 
 // Import TypeScript modules
-import { getGame, registerSettings } from './module/settings';
-import { preloadTemplates } from './module/preloadTemplates';
-import { TURN_ALERT_MODULE_NAME } from './module/settings';
-import { initHooks, readyHooks, setupHooks } from './module/Hooks';
-// import { installedModules, setupModules } from './module/setupModules';
+import { getGame, registerSettings } from './scripts/settings';
+import { preloadTemplates } from './scripts/preloadTemplates';
+import { TURN_ALERT_MODULE_NAME } from './scripts/settings';
+import { initHooks, readyHooks, setupHooks } from './scripts/Hooks';
 
 export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3

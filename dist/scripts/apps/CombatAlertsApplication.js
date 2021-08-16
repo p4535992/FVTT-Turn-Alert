@@ -1,43 +1,33 @@
-import TurnAlertConfig from "./TurnAlertConfig";
-import TurnAlert from "../TurnAlert";
-import { getGame, TURN_ALERT_MODULE_NAME } from "../settings";
-import { i18n, i18nFormat } from "../../turn-alert";
-import { CombatantData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
-
+import TurnAlertConfig from "./TurnAlertConfig.js";
+import TurnAlert from "../TurnAlert.js";
+import { getGame, TURN_ALERT_MODULE_NAME } from "../settings.js";
+import { i18n, i18nFormat } from "../../turn-alert.js";
 /**
  * Provides an interface to view, add, update, and delete alerts on a given combat.
  * @param {string} data.combatId The id of the combat to display.
  */
 export default class CombatAlertsApplication extends Application {
-
-    combatId:string;
-    _combat:Combat;
-    _updateHandler:any;
-
-    constructor(data, options?) {
+    constructor(data, options) {
         super(options);
-
         this.combatId = data.combatId;
-        this._combat = <Combat>getGame().combats?.get(this.combatId);
-        if (!this._combat) throw new Error(`The given combatID (${data.combatId}) is not valid.`);
-
+        this._combat = getGame().combats?.get(this.combatId);
+        if (!this._combat)
+            throw new Error(`The given combatID (${data.combatId}) is not valid.`);
         this._updateHandler = this._onCombatUpdate.bind(this);
-
         Hooks.on("updateCombat", this._updateHandler);
         Hooks.on("deleteCombat", this.close.bind(this));
     }
-
     /**
      * A handler called each time the combat associated with this instance changes.
      */
     _onCombatUpdate(combat, changed, options, userId) {
         if (combat.data.id === this.combatId && changed.active === false) {
             this.close();
-        } else {
+        }
+        else {
             this.render(false);
         }
     }
-
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
@@ -48,7 +38,6 @@ export default class CombatAlertsApplication extends Application {
             resizable: true,
         });
     }
-
     /** @override */
     getData(options) {
         return {
@@ -71,39 +60,33 @@ export default class CombatAlertsApplication extends Application {
             currentInitiative: this._combat.turns[this._combat.data.turn]?.initiative,
         };
     }
-
     /** Prepares and gets the relevant data for each turn in the combat. */
-    _turnData():any[] {
+    _turnData() {
         return this._combat.turns.map((turn, index) => ({
             index,
-            id: <string>turn.id,
-            img: <string>turn.img,
-            name: <string>turn.name,
-            initiative: <number>turn.initiative,
-            isVisible: <boolean>(turn.isOwner && turn.visible && !turn.hidden),
-            alerts: <TurnAlert[]>this._alertsForTurn(turn.id)
+            id: turn.id,
+            img: turn.img,
+            name: turn.name,
+            initiative: turn.initiative,
+            isVisible: (turn.isOwner && turn.visible && !turn.hidden),
+            alerts: this._alertsForTurn(turn.id)
                 .map(this._createAlertDisplayData.bind(this))
-                .filter((alert:any) => alert.isVisible),
+                .filter((alert) => alert.isVisible),
         }));
     }
-
     /** Produces the data required by the view for the given alert */
     _createAlertDisplayData(alert) {
         const nextTrigger = TurnAlert.nextTriggerRound(alert, this._combat.data.round, this._combat.data.turn);
-        const repeatString =
-            alert.repeating?.frequency > 1
-                ? i18nFormat(`${TURN_ALERT_MODULE_NAME}.APP.RepeatEveryNRounds`, {
-                      num: alert.repeating.frequency,
-                  })
-                : i18n(`${TURN_ALERT_MODULE_NAME}.APP.RepeatEveryOneRound`);
-
+        const repeatString = alert.repeating?.frequency > 1
+            ? i18nFormat(`${TURN_ALERT_MODULE_NAME}.APP.RepeatEveryNRounds`, {
+                num: alert.repeating.frequency,
+            })
+            : i18n(`${TURN_ALERT_MODULE_NAME}.APP.RepeatEveryOneRound`);
         const roundTitle = alert.endOfTurn
             ? `${TURN_ALERT_MODULE_NAME}.APP.TriggerAtEndOfTurnNum`
             : `${TURN_ALERT_MODULE_NAME}.APP.TriggerAtStartOfTurnNum`;
         const roundIcon = alert.endOfTurn ? "hourglass-end" : "hourglass-start";
-
         const macroName = (getGame().macros?.get(alert.macro) || getGame().macros?.getName(alert.macro))?.data?.name;
-
         return {
             id: alert.id,
             label: alert.label,
@@ -118,20 +101,18 @@ export default class CombatAlertsApplication extends Application {
             macroName,
         };
     }
-
     /**
      * Gets all of the alerts associated with a particular turn
      * @param {string} turnId The turn id to get alerts for
      */
     _alertsForTurn(turnId) {
-        const alerts = <TurnAlert[]>this._combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
-        if (!alerts){
-          return [];
+        const alerts = this._combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+        if (!alerts) {
+            return [];
         }
         //@ts-ignore
         return Object.values(alerts).filter((alert) => alert.turnId === turnId);
     }
-
     _getHeaderButtons() {
         let buttons = super._getHeaderButtons();
         buttons.unshift({
@@ -142,22 +123,17 @@ export default class CombatAlertsApplication extends Application {
                 window.open("https://github.com/schultzcole/FVTT-Turn-Alert/wiki/User-Guide#combat-alerts-window");
             },
         });
-
         return buttons;
     }
-
     /** @override */
     activateListeners(html) {
         super.activateListeners(html);
-
         // Set minimum width of the containing application window.
         html.parent().parent().css("min-width", 300);
-
         // Listen for "delete all" button to be clicked.
         html.find("#cn-delete-all").click((event) => {
             this._combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
         });
-
         // Listen for alert add buttons to be clicked.
         html.find(".add-alert-button").click((event) => {
             const alertData = {
@@ -168,25 +144,20 @@ export default class CombatAlertsApplication extends Application {
             };
             new TurnAlertConfig(alertData, {}).render(true);
         });
-
         // Listen for alert edit buttons to be clicked.
         html.find(".edit-alert-button").click((event) => {
             const alertId = event.currentTarget.dataset.id;
-            const alertData = this._combat.getFlag(TURN_ALERT_MODULE_NAME,`alerts.${alertId}`); //getProperty(this._combat.data, `flags.${TURN_ALERT_MODULE_NAME}.alerts.${alertId}`);
+            const alertData = this._combat.getFlag(TURN_ALERT_MODULE_NAME, `alerts.${alertId}`); //getProperty(this._combat.data, `flags.${TURN_ALERT_MODULE_NAME}.alerts.${alertId}`);
             if (!alertData) {
-                throw new Error(
-                    `Trying to edit a non-existent turn alert! ID "${alertId}" does not exist on combat "${this.combatId}"`
-                );
+                throw new Error(`Trying to edit a non-existent turn alert! ID "${alertId}" does not exist on combat "${this.combatId}"`);
             }
             new TurnAlertConfig(alertData, {}).render(true);
         });
-
         // Listen for alert delete buttons to be clicked.
         html.find(".delete-alert-button").click((event) => {
             TurnAlert.delete(this.combatId, event.currentTarget.dataset.id);
         });
     }
-
     /** @override */
     async close() {
         // Unregister the combat update handler.
