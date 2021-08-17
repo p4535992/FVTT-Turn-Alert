@@ -27,8 +27,8 @@ export default class TurnAlertConfig extends FormApplication {
         return !this.turn
             ? null
             : {
-                imgPath: this.turn.token.data.img,
-                name: this.turn.token.name,
+                imgPath: this.turn.token?.data.img,
+                name: this.turn.token?.name,
                 initiative: this.turn.initiative,
             };
     }
@@ -90,7 +90,7 @@ export default class TurnAlertConfig extends FormApplication {
     }
     _onCombatantHover(event) {
         event.preventDefault();
-        const token = getCanvas().tokens?.get(this.turn?.token?.id);
+        const token = getCanvas().tokens?.get(this.turn.token?.id);
         //@ts-ignore
         if (token && token.isVisible && !token._controlled) {
             //@ts-ignore
@@ -99,7 +99,7 @@ export default class TurnAlertConfig extends FormApplication {
     }
     _onCombatantHoverOut(event) {
         event.preventDefault();
-        const token = getCanvas().tokens?.get(this.turn?.token?.id);
+        const token = getCanvas().tokens?.get(this.turn.token?.id);
         if (token) {
             //@ts-ignore
             token._onHoverOut(event);

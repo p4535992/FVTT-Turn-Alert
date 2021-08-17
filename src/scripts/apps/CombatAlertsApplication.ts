@@ -19,8 +19,9 @@ export default class CombatAlertsApplication extends Application {
 
         this.combatId = data.combatId;
         this._combat = <Combat>getGame().combats?.get(this.combatId);
-        if (!this._combat) throw new Error(`The given combatID (${data.combatId}) is not valid.`);
-
+        if (!this._combat){
+            throw new Error(`The given combatID (${data.combatId}) is not valid.`);
+        }
         this._updateHandler = this._onCombatUpdate.bind(this);
 
         Hooks.on("updateCombat", this._updateHandler);
@@ -160,19 +161,18 @@ export default class CombatAlertsApplication extends Application {
 
         // Listen for alert add buttons to be clicked.
         html.find(".add-alert-button").click((event) => {
-            const alertData = {
-                combatId: this.combatId,
-                createdRound: this._combat.data.round,
-                round: 1,
-                turnId: event.currentTarget.dataset.turnid || null,
-            };
+            const alertData = TurnAlert.defaultData;
+            alertData.combatId = this.combatId,
+            alertData.createdRound = this._combat.data.round,
+            alertData.round = 1,
+            alertData.turnId = event.currentTarget.dataset.turnid || null,
             new TurnAlertConfig(alertData, {}).render(true);
         });
 
         // Listen for alert edit buttons to be clicked.
         html.find(".edit-alert-button").click((event) => {
             const alertId = event.currentTarget.dataset.id;
-            const alertData = this._combat.getFlag(TURN_ALERT_MODULE_NAME,`alerts.${alertId}`); //getProperty(this._combat.data, `flags.${TURN_ALERT_MODULE_NAME}.alerts.${alertId}`);
+            const alertData = <TurnAlert>this._combat.getFlag(TURN_ALERT_MODULE_NAME,`alerts.${alertId}`); //getProperty(this._combat.data, `flags.${TURN_ALERT_MODULE_NAME}.alerts.${alertId}`);
             if (!alertData) {
                 throw new Error(
                     `Trying to edit a non-existent turn alert! ID "${alertId}" does not exist on combat "${this.combatId}"`

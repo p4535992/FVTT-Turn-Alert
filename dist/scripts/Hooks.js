@@ -84,10 +84,10 @@ export async function CombatTrackerPrototypeGetEntryContextOptionsHandler(wrappe
             return getGame().combat?.combatants?.get(li.data("combatant-id"))?.isOwner;
         },
         callback: (li) => {
-            const alertData = {
-                round: 1,
-                turnId: li.data("combatant-id"),
-            };
+            const alertData = TurnAlert.defaultData;
+            alertData.id = li.data("combatant-id");
+            alertData.round = 1;
+            alertData.turnId = li.data("combatant-id");
             new TurnAlertConfig(alertData, {}).render(true);
         },
     });

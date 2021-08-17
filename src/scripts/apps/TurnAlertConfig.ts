@@ -9,14 +9,14 @@ import TurnAlert from "../TurnAlert";
  */
 export default class TurnAlertConfig extends FormApplication {
 
-    _roundAbsolute:string;
-    _expireAbsolute:string;
+    _roundAbsolute:boolean;
+    _expireAbsolute:boolean;
 
     combat:Combat;
-    turn:any;
+    turn:Combatant;
 
-    constructor(data, options) {
-        data = foundry.utils.mergeObject(TurnAlert.defaultData, data);
+    constructor(data:TurnAlert, options) {
+        data = <TurnAlert>foundry.utils.mergeObject(TurnAlert.defaultData, data);
         if (data.repeating) {
             data.repeating = foundry.utils.mergeObject(TurnAlert.defaultRepeatingData, data.repeating);
         }
@@ -33,7 +33,7 @@ export default class TurnAlertConfig extends FormApplication {
         }
 
         this._roundAbsolute = data.roundAbsolute;
-        this._expireAbsolute = data.repeating?.expireAbsolute;
+        this._expireAbsolute = <boolean>data.repeating?.expireAbsolute;
         this.combat = <Combat>getGame().combats?.get(data.combatId);
         //@ts-ignore
         this.turn = this.object.turnId ? this.combat.turns.find((turn) => turn.id === this.object.turnId) : null;
@@ -43,8 +43,8 @@ export default class TurnAlertConfig extends FormApplication {
         return !this.turn
             ? null
             : {
-                  imgPath: this.turn.token.data.img,
-                  name: this.turn.token.name,
+                  imgPath: this.turn.token?.data.img,
+                  name: this.turn.token?.name,
                   initiative: this.turn.initiative,
               };
     }
@@ -115,7 +115,7 @@ export default class TurnAlertConfig extends FormApplication {
 
     _onCombatantHover(event) {
         event.preventDefault();
-        const token = getCanvas().tokens?.get(this.turn?.token?.id);
+        const token = getCanvas().tokens?.get(<string>this.turn.token?.id);
         //@ts-ignore
         if (token && token.isVisible && !token._controlled) {
             //@ts-ignore
@@ -125,7 +125,7 @@ export default class TurnAlertConfig extends FormApplication {
 
     _onCombatantHoverOut(event) {
         event.preventDefault();
-        const token = getCanvas().tokens?.get(this.turn?.token?.id);
+        const token = getCanvas().tokens?.get(<string>this.turn.token?.id);
         if (token) {
             //@ts-ignore
             token._onHoverOut(event);
@@ -287,7 +287,7 @@ export default class TurnAlertConfig extends FormApplication {
             macro: formData.macro,
         };
 
-        let finalData = foundry.utils.mergeObject(this.object, newData, { inplace: false });
+        let finalData = <TurnAlert>foundry.utils.mergeObject(this.object, newData, { inplace: false });
         //@ts-ignore
         if (this.object.id) {
             TurnAlert.update(finalData);

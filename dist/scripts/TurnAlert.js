@@ -27,7 +27,7 @@ import { compareTurns } from "./utils.js";
 export default class TurnAlert {
     static get defaultData() {
         return {
-            id: null,
+            id: getGame().combat?.id,
             name: null,
             combatId: getGame().combat?.id,
             createdRound: getGame().combat?.data.round,
@@ -287,7 +287,7 @@ export default class TurnAlert {
         }
         const combat = getGame().combats?.get(data.combatId);
         if (!combat) {
-            throw new Error(`The combat "${data.combatID}" does not exist.`);
+            throw new Error(`The combat "${data.combatId}" does not exist.`);
         }
         const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
         const existingData = getProperty(alerts[0], data.id);

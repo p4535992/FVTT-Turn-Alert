@@ -11,8 +11,9 @@ export default class CombatAlertsApplication extends Application {
         super(options);
         this.combatId = data.combatId;
         this._combat = getGame().combats?.get(this.combatId);
-        if (!this._combat)
+        if (!this._combat) {
             throw new Error(`The given combatID (${data.combatId}) is not valid.`);
+        }
         this._updateHandler = this._onCombatUpdate.bind(this);
         Hooks.on("updateCombat", this._updateHandler);
         Hooks.on("deleteCombat", this.close.bind(this));
@@ -136,13 +137,12 @@ export default class CombatAlertsApplication extends Application {
         });
         // Listen for alert add buttons to be clicked.
         html.find(".add-alert-button").click((event) => {
-            const alertData = {
-                combatId: this.combatId,
-                createdRound: this._combat.data.round,
-                round: 1,
-                turnId: event.currentTarget.dataset.turnid || null,
-            };
-            new TurnAlertConfig(alertData, {}).render(true);
+            const alertData = TurnAlert.defaultData;
+            alertData.combatId = this.combatId,
+                alertData.createdRound = this._combat.data.round,
+                alertData.round = 1,
+                alertData.turnId = event.currentTarget.dataset.turnid || null,
+                new TurnAlertConfig(alertData, {}).render(true);
         });
         // Listen for alert edit buttons to be clicked.
         html.find(".edit-alert-button").click((event) => {

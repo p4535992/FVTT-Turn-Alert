@@ -1,5 +1,6 @@
 import { error, log } from "../turn-alert.js";
 import { getCanvas, getGame, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
+import { TurnAlertRepeating } from "./TurnAlertModels.js";
 import { compareTurns } from "./utils.js";
 
 /**
@@ -27,12 +28,29 @@ import { compareTurns } from "./utils.js";
  */
 
 export default class TurnAlert {
+
+    id:string|null;
+    name:string|null;
+    combatId:string;
+    createdRound:number;
+    round:number;
+    roundAbsolute:boolean;
+    turnId:string|null;
+    endOfTurn:boolean;
+    repeating:TurnAlertRepeating|null;
+    label:string|null;
+    message:string|null;
+    recipientIds:string[];
+    macro:string|null;
+    args:string[];
+    userId:string;
+
     static get defaultData() {
         return {
-            id: null,
+            id: <string>getGame().combat?.id,
             name: null,
-            combatId: getGame().combat?.id,
-            createdRound: getGame().combat?.data.round,
+            combatId: <string>getGame().combat?.id,
+            createdRound: <number>getGame().combat?.data.round,
             round: 0,
             roundAbsolute: false,
             turnId: null,
@@ -43,7 +61,7 @@ export default class TurnAlert {
             recipientIds: [],
             macro: null,
             args: [],
-            userId: getGame().userId,
+            userId: <string>getGame().userId,
         };
     }
 
@@ -195,7 +213,7 @@ export default class TurnAlert {
         if (!combat){
           throw new Error(`No combat exists with ID ${combatId}`);
         }
-        return <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME,'alerts');//combat.data.flags.turnAlert?.alerts;
+        return <TurnAlert>combat.getFlag(TURN_ALERT_MODULE_NAME,'alerts');//combat.data.flags.turnAlert?.alerts;
     }
 
     /**
@@ -316,7 +334,7 @@ export default class TurnAlert {
      * Updates a given turn alert. REQUIRES the given alert data to contain an ID and combat ID.
      * @param {object} data The TurnAlert data to update.
      */
-    static async update(data) {
+    static async update(data:TurnAlert) {
         if (!data.id) {
             throw new Error("Cannot update an alert that doesn't contain an alert ID.");
         }
@@ -327,7 +345,7 @@ export default class TurnAlert {
         const combat = getGame().combats?.get(data.combatId);
 
         if (!combat) {
-            throw new Error(`The combat "${data.combatID}" does not exist.`);
+            throw new Error(`The combat "${data.combatId}" does not exist.`);
         }
 
         const alerts = <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
@@ -341,8 +359,8 @@ export default class TurnAlert {
 
         if (combat.canUserModify(<User>getGame().user, "update")) {
             if (data.repeating) {
-                //@ts-ignore
-                data.repeating = foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
+              //@ts-ignore
+              data.repeating = <TurnAlertRepeating>foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
             }
 
             alerts[data.id] = foundry.utils.mergeObject(existingData, data);
