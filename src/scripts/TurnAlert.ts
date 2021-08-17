@@ -1,5 +1,5 @@
 import { error, log } from "../turn-alert.js";
-import { getCanvas, getGame, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
+import { getCanvas, getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
 import { TurnAlertRepeating } from "./TurnAlertModels.js";
 import { compareTurns } from "./utils.js";
 
@@ -29,7 +29,7 @@ import { compareTurns } from "./utils.js";
 
 export default class TurnAlert {
 
-    id:string|null;
+    id:string;
     name:string|null;
     combatId:string;
     createdRound:number;
@@ -80,7 +80,7 @@ export default class TurnAlert {
     static getTurnIndex = (alert) => TurnAlert.getCombat(alert)?.turns.findIndex((t) => t.id === alert.turnId);
 
     /** gets the next upcoming round and turn that this alert will trigger on. */
-    static getNextTriggerTurn = (alert, currentRound, currentTurn) => ({
+    static getNextTriggerTurn = (alert:TurnAlert, currentRound:number, currentTurn:number) => ({
         round: TurnAlert.nextTriggerRound(alert, currentRound, currentTurn),
         turn: TurnAlert.getTurnIndex(alert),
     });
@@ -121,11 +121,11 @@ export default class TurnAlert {
         }
 
         const { round, turn } = TurnAlert.getNextTriggerTurn(alert, triggerRound, triggerTurn);
-        return compareTurns(round, turn, triggerRound, triggerTurn) === 0;
+        return compareTurns(round, <number>turn, triggerRound, triggerTurn) === 0;
     }
 
     /** checks whether a given alert is expired given the current round and turn */
-    static checkExpired(alert, currentRound, currentTurn, previousRound, previousTurn) {
+    static checkExpired(alert:TurnAlert, currentRound:number, currentTurn:number, previousRound:number, previousTurn:number) {
         let triggerRound,
             triggerTurn = 0;
 
@@ -207,13 +207,13 @@ export default class TurnAlert {
     }
 
     /** gets the alerts flag on the given combat. */
-    static _getAlertObjectForCombat(combatId):TurnAlert|undefined  {
+    static _getAlertObjectForCombat(combatId):TurnAlert[]|undefined  {
         combatId = combatId || getGame().combat?.data._id;
         const combat = getGame().combats?.get(combatId);
         if (!combat){
           throw new Error(`No combat exists with ID ${combatId}`);
         }
-        return <TurnAlert>combat.getFlag(TURN_ALERT_MODULE_NAME,'alerts');//combat.data.flags.turnAlert?.alerts;
+        return <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME,TURN_ALERT_FLAG_ALERTS);//combat.data.flags.turnAlert?.alerts;
     }
 
     /**
@@ -223,7 +223,7 @@ export default class TurnAlert {
      * @param {string} combatId The ID of the combat that the alert can be found on
      */
     static getAlertById(alertId, combatId):TurnAlert|undefined {
-        const alerts = <TurnAlert>this._getAlertObjectForCombat(combatId);
+        const alerts = <TurnAlert[]>this._getAlertObjectForCombat(combatId);
         if (!alerts){
           return undefined;
         }
@@ -310,7 +310,7 @@ export default class TurnAlert {
             const id = randomID(16);
             alertData.id = id;
 
-            let combatAlerts = <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            let combatAlerts = <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             if (!combatAlerts){
                combatAlerts = [];
             }
@@ -348,7 +348,7 @@ export default class TurnAlert {
             throw new Error(`The combat "${data.combatId}" does not exist.`);
         }
 
-        const alerts = <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+        const alerts = <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         const existingData = getProperty(alerts[0], data.id);
 
         if (!existingData) {
@@ -365,9 +365,9 @@ export default class TurnAlert {
 
             alerts[data.id] = foundry.utils.mergeObject(existingData, data);
 
-            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             return combat
-                .setFlag(TURN_ALERT_MODULE_NAME, "alerts", alerts)
+                .setFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS, alerts)
                 .then(() => log(` Updated Alert ${data.id} on combat ${data.combatId}`));
         } else {
             log(
@@ -390,7 +390,7 @@ export default class TurnAlert {
         }
 
         if (combat.canUserModify(<User>getGame().user, "update")) {
-            const alerts = <TurnAlert>combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts") || {};
+            const alerts = <TurnAlert>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS) || {};
 
             if (!(alertId in alerts)) {
                 throw new Error(`The alert "${alertId}" does not exist in combat "${combatId}".`);
@@ -398,9 +398,9 @@ export default class TurnAlert {
 
             delete alerts[alertId];
 
-            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             return combat
-                .setFlag(TURN_ALERT_MODULE_NAME, "alerts", alerts)
+                .setFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS, alerts)
                 .then(() => log(` Deleted Alert ${alertId} on combat ${combatId}`));
         } else {
             log(

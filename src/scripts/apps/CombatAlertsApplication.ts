@@ -1,6 +1,6 @@
 import TurnAlertConfig from "./TurnAlertConfig";
 import TurnAlert from "../TurnAlert";
-import { getGame, TURN_ALERT_MODULE_NAME } from "../settings";
+import { getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME } from "../settings";
 import { i18n, i18nFormat } from "../../turn-alert";
 import { CombatantData } from "@league-of-foundry-developers/foundry-vtt-types/src/foundry/common/data/module.mjs";
 
@@ -125,7 +125,7 @@ export default class CombatAlertsApplication extends Application {
      * @param {string} turnId The turn id to get alerts for
      */
     _alertsForTurn(turnId) {
-        const alerts = <TurnAlert[]>this._combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+        const alerts = <TurnAlert[]>this._combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         if (!alerts){
           return [];
         }
@@ -156,7 +156,7 @@ export default class CombatAlertsApplication extends Application {
 
         // Listen for "delete all" button to be clicked.
         html.find("#cn-delete-all").click((event) => {
-            this._combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            this._combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         });
 
         // Listen for alert add buttons to be clicked.

@@ -1,6 +1,6 @@
 import TurnAlertConfig from "./TurnAlertConfig.js";
 import TurnAlert from "../TurnAlert.js";
-import { getGame, TURN_ALERT_MODULE_NAME } from "../settings.js";
+import { getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME } from "../settings.js";
 import { i18n, i18nFormat } from "../../turn-alert.js";
 /**
  * Provides an interface to view, add, update, and delete alerts on a given combat.
@@ -107,7 +107,7 @@ export default class CombatAlertsApplication extends Application {
      * @param {string} turnId The turn id to get alerts for
      */
     _alertsForTurn(turnId) {
-        const alerts = this._combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+        const alerts = this._combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         if (!alerts) {
             return [];
         }
@@ -133,7 +133,7 @@ export default class CombatAlertsApplication extends Application {
         html.parent().parent().css("min-width", 300);
         // Listen for "delete all" button to be clicked.
         html.find("#cn-delete-all").click((event) => {
-            this._combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            this._combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         });
         // Listen for alert add buttons to be clicked.
         html.find(".add-alert-button").click((event) => {

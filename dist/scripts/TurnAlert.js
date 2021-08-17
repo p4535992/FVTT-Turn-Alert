@@ -1,5 +1,5 @@
 import { error, log } from "../turn-alert.js";
-import { getCanvas, getGame, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
+import { getCanvas, getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
 import { compareTurns } from "./utils.js";
 /**
  * Data structure schema:
@@ -171,7 +171,7 @@ export default class TurnAlert {
         if (!combat) {
             throw new Error(`No combat exists with ID ${combatId}`);
         }
-        return combat.getFlag(TURN_ALERT_MODULE_NAME, 'alerts'); //combat.data.flags.turnAlert?.alerts;
+        return combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS); //combat.data.flags.turnAlert?.alerts;
     }
     /**
      * Gets a specific alert on a specific combat. Returns undefined if the alert doesn't exist
@@ -257,7 +257,7 @@ export default class TurnAlert {
         if (combat.canUserModify(getGame().user, "update")) {
             const id = randomID(16);
             alertData.id = id;
-            let combatAlerts = combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            let combatAlerts = combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             if (!combatAlerts) {
                 combatAlerts = [];
             }
@@ -289,7 +289,7 @@ export default class TurnAlert {
         if (!combat) {
             throw new Error(`The combat "${data.combatId}" does not exist.`);
         }
-        const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts");
+        const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
         const existingData = getProperty(alerts[0], data.id);
         if (!existingData) {
             throw new Error(`Cannot update alert ${data.id} in combat ${data.combatId} because that alert doesn't already exist in that combat.`);
@@ -300,9 +300,9 @@ export default class TurnAlert {
                 data.repeating = foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
             }
             alerts[data.id] = foundry.utils.mergeObject(existingData, data);
-            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             return combat
-                .setFlag(TURN_ALERT_MODULE_NAME, "alerts", alerts)
+                .setFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS, alerts)
                 .then(() => log(` Updated Alert ${data.id} on combat ${data.combatId}`));
         }
         else {
@@ -321,14 +321,14 @@ export default class TurnAlert {
             throw new Error(`The combat "${combatId}" does not exist.`);
         }
         if (combat.canUserModify(getGame().user, "update")) {
-            const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, "alerts") || {};
+            const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS) || {};
             if (!(alertId in alerts)) {
                 throw new Error(`The alert "${alertId}" does not exist in combat "${combatId}".`);
             }
             delete alerts[alertId];
-            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, "alerts");
+            await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
             return combat
-                .setFlag(TURN_ALERT_MODULE_NAME, "alerts", alerts)
+                .setFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS, alerts)
                 .then(() => log(` Deleted Alert ${alertId} on combat ${combatId}`));
         }
         else {
