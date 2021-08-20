@@ -11,27 +11,31 @@
  */
 // Import JavaScript modules
 // Import TypeScript modules
-import { getGame, registerSettings } from "./scripts/settings.js";
+import { getGame } from "./scripts/settings.js";
 import { preloadTemplates } from "./scripts/preloadTemplates.js";
 import { TURN_ALERT_MODULE_NAME } from "./scripts/settings.js";
 import { initHooks, readyHooks, setupHooks } from "./scripts/Hooks.js";
 export let debugEnabled = 0;
 // 0 = none, warnings = 1, debug = 2, all = 3
-export let debug = (...args) => { if (debugEnabled > 1)
-    console.log(`DEBUG:${TURN_ALERT_MODULE_NAME} | `, ...args); };
-export let log = (...args) => console.log(`${TURN_ALERT_MODULE_NAME} | `, ...args);
-export let warn = (...args) => { if (debugEnabled > 0)
-    console.warn(`${TURN_ALERT_MODULE_NAME} | `, ...args); };
-export let error = (...args) => console.error(`${TURN_ALERT_MODULE_NAME} | `, ...args);
-export let timelog = (...args) => warn(`${TURN_ALERT_MODULE_NAME} | `, Date.now(), ...args);
-export let i18n = key => {
+export const debug = (...args) => {
+    if (debugEnabled > 1)
+        console.log(`DEBUG:${TURN_ALERT_MODULE_NAME} | `, ...args);
+};
+export const log = (...args) => console.log(`${TURN_ALERT_MODULE_NAME} | `, ...args);
+export const warn = (...args) => {
+    if (debugEnabled > 0)
+        console.warn(`${TURN_ALERT_MODULE_NAME} | `, ...args);
+};
+export const error = (...args) => console.error(`${TURN_ALERT_MODULE_NAME} | `, ...args);
+export const timelog = (...args) => warn(`${TURN_ALERT_MODULE_NAME} | `, Date.now(), ...args);
+export const i18n = (key) => {
     return getGame().i18n.localize(key);
 };
-export let i18nFormat = (key, data = {}) => {
+export const i18nFormat = (key, data = {}) => {
     return getGame().i18n.format(key, data);
 };
-export let setDebugLevel = (debugText) => {
-    debugEnabled = { "none": 0, "warn": 1, "debug": 2, "all": 3 }[debugText] || 0;
+export const setDebugLevel = (debugText) => {
+    debugEnabled = { none: 0, warn: 1, debug: 2, all: 3 }[debugText] || 0;
     // 0 = none, warnings = 1, debug = 2, all = 3
     if (debugEnabled >= 3)
         CONFIG.debug.hooks = true;
@@ -42,7 +46,7 @@ export let setDebugLevel = (debugText) => {
 Hooks.once('init', async () => {
     console.log(`${TURN_ALERT_MODULE_NAME} | Initializing ${TURN_ALERT_MODULE_NAME}`);
     // Register custom module settings
-    registerSettings();
+    // registerSettings();
     initHooks();
     // Assign custom classes and constants here
     // Register custom module settings
@@ -59,7 +63,7 @@ Hooks.once('setup', function () {
     // Do anything after initialization but before ready
     //setupModules();
     setupHooks();
-    registerSettings();
+    // registerSettings();
 });
 /* ------------------------------------ */
 /* When ready							*/

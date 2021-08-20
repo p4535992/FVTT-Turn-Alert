@@ -14,7 +14,7 @@ export default class TurnAlertConfig extends FormApplication {
         super(data, options);
         if (!getGame().combats?.has(data.combatId)) {
             ui.notifications?.error(i18n(`${TURN_ALERT_MODULE_NAME}.ERROR.CannotShowAlertConfig.NoCombatId`));
-            const combats = Array.from(getGame().combats?.keys()).join(", ");
+            const combats = Array.from(getGame().combats?.keys()).join(', ');
             throw new Error(`Invalid combat id provided. Got ${data.combatId}, which does not match any of [${combats}]`);
         }
         this._roundAbsolute = data.roundAbsolute;
@@ -35,8 +35,8 @@ export default class TurnAlertConfig extends FormApplication {
     /** @override */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            id: "turn-alert-config",
-            classes: ["sheet"],
+            id: 'turn-alert-config',
+            classes: ['sheet'],
             title: i18n(`${TURN_ALERT_MODULE_NAME}.APP.TurnAlertConfigTitle`),
             template: `/modules/${TURN_ALERT_MODULE_NAME}/templates/turn-alert-config.hbs`,
             width: 450,
@@ -72,13 +72,13 @@ export default class TurnAlertConfig extends FormApplication {
         };
     }
     _getHeaderButtons() {
-        let buttons = super._getHeaderButtons();
+        const buttons = super._getHeaderButtons();
         buttons.unshift({
-            icon: "fas fa-info-circle",
-            class: "icon",
-            label: "",
+            icon: 'fas fa-info-circle',
+            class: 'icon',
+            label: '',
             onclick: async (event) => {
-                window.open("https://github.com/schultzcole/FVTT-Turn-Alert/wiki/User-Guide#turn-alert-configuration-dialog");
+                window.open('https://github.com/schultzcole/FVTT-Turn-Alert/wiki/User-Guide#turn-alert-configuration-dialog');
             },
         });
         return buttons;
@@ -86,7 +86,7 @@ export default class TurnAlertConfig extends FormApplication {
     /** @override */
     activateListeners(html) {
         super.activateListeners(html);
-        html.find(".turn-display").hover(this._onCombatantHover.bind(this), this._onCombatantHoverOut.bind(this));
+        html.find('.turn-display').hover(this._onCombatantHover.bind(this), this._onCombatantHoverOut.bind(this));
     }
     _onCombatantHover(event) {
         event.preventDefault();
@@ -108,18 +108,18 @@ export default class TurnAlertConfig extends FormApplication {
     /** @override */
     _onChangeInput(event) {
         let fd = new FormData();
-        if (isNewerVersion(getGame().data.version, "0.7.0")) {
+        if (isNewerVersion(getGame().data.version, '0.7.0')) {
             fd = new FormDataExtended(event.currentTarget.form, {});
         }
         else {
             //@ts-ignore
             fd = this._getFormData(event.currentTarget.form);
         }
-        let formRound = Number(fd.get("round"));
-        const formRoundAbsolute = fd.get("roundAbsolute") === "true";
-        const formRepeating = fd.get("repeatingToggle") === "true";
-        const formEndOfTurn = fd.get("endOfTurn") === "true";
-        const formMacroString = fd.get("macro");
+        let formRound = Number(fd.get('round'));
+        const formRoundAbsolute = fd.get('roundAbsolute') === 'true';
+        const formRepeating = fd.get('repeatingToggle') === 'true';
+        const formEndOfTurn = fd.get('endOfTurn') === 'true';
+        const formMacroString = fd.get('macro');
         // Convert between absolute and relative round number
         const prevRoundAbsolute = this._roundAbsolute || false;
         if (prevRoundAbsolute != formRoundAbsolute) {
@@ -133,9 +133,9 @@ export default class TurnAlertConfig extends FormApplication {
         let formRepeatParams = {};
         if (formRepeating) {
             formRepeatParams = {
-                frequency: Number(fd.get("repeatFrequency")),
-                expire: Number(fd.get("repeatExpire")),
-                expireAbsolute: fd.get("repeatExpireAbsolute") === "true",
+                frequency: Number(fd.get('repeatFrequency')),
+                expire: Number(fd.get('repeatExpire')),
+                expireAbsolute: fd.get('repeatExpireAbsolute') === 'true',
             };
         }
         // Update repeating expiration round based on absolute/relative and initial trigger round.
@@ -145,42 +145,42 @@ export default class TurnAlertConfig extends FormApplication {
         if (prevExpireAbsolute != formRepeatParams.expireAbsolute) {
             //@ts-ignore
             formRepeatParams.expire = formRepeatParams.expireAbsolute
-                //@ts-ignore
-                ? triggerRoundAbs + formRepeatParams.expire // expire round was previously relative
-                //@ts-ignore
-                : formRepeatParams.expire - triggerRoundAbs; // expire round was previously absolute
+                ? //@ts-ignore
+                    triggerRoundAbs + formRepeatParams.expire // expire round was previously relative
+                : //@ts-ignore
+                    formRepeatParams.expire - triggerRoundAbs; // expire round was previously absolute
         }
         //@ts-ignore
         this._expireAbsolute = formRepeatParams.expireAbsolute;
         this._updateForm(formRound, formRoundAbsolute, formRepeating, formEndOfTurn, formMacroString, formRepeatParams);
     }
     _updateForm(round, roundAbsolute, repeating, endOfTurn, macroString, repeatParams) {
-        const form = $(".turn-alert-config");
-        const roundLabel = form.find("#roundLabel");
+        const form = $('.turn-alert-config');
+        const roundLabel = form.find('#roundLabel');
         roundLabel.text(this._getRoundLabel(roundAbsolute));
-        const roundTextBox = form.find("#round");
-        roundTextBox.prop("value", round);
-        const validRoundWarning = form.find("#validRoundWarning");
+        const roundTextBox = form.find('#round');
+        roundTextBox.prop('value', round);
+        const validRoundWarning = form.find('#validRoundWarning');
         if (this._validRound(round, roundAbsolute, endOfTurn)) {
             validRoundWarning.hide();
         }
         else {
             validRoundWarning.show();
         }
-        const repeatingParams = form.find("#repeatingParams");
+        const repeatingParams = form.find('#repeatingParams');
         if (repeating) {
             repeatingParams.show();
-            const frequencyTextBox = repeatingParams.find("#frequency");
-            frequencyTextBox.prop("value", Math.max(repeatParams.frequency, 1));
-            const expireLabel = repeatingParams.find("#expireLabel");
+            const frequencyTextBox = repeatingParams.find('#frequency');
+            frequencyTextBox.prop('value', Math.max(repeatParams.frequency, 1));
+            const expireLabel = repeatingParams.find('#expireLabel');
             expireLabel.text(this._getExpireLabel(repeatParams.expireAbsolute));
-            const expireTextBox = repeatingParams.find("#expire");
-            expireTextBox.prop("value", repeatParams.expire);
+            const expireTextBox = repeatingParams.find('#expire');
+            expireTextBox.prop('value', repeatParams.expire);
         }
         else {
             repeatingParams.hide();
         }
-        const validMacroWarning = form.find("#macroWarning");
+        const validMacroWarning = form.find('#macroWarning');
         if (this._validMacro(macroString)) {
             validMacroWarning.hide();
         }
@@ -218,7 +218,7 @@ export default class TurnAlertConfig extends FormApplication {
     }
     /** @override */
     async _updateObject(event, formData) {
-        const whisperRecipients = $(".turn-alert-config #recipients option")
+        const whisperRecipients = $('.turn-alert-config #recipients option')
             .get()
             //@ts-ignore
             .map((option) => ({ selected: option.selected, id: option.value }));
@@ -241,7 +241,7 @@ export default class TurnAlertConfig extends FormApplication {
                 : whisperRecipients.filter((r) => r.selected).map((r) => r.id),
             macro: formData.macro,
         };
-        let finalData = foundry.utils.mergeObject(this.object, newData, { inplace: false });
+        const finalData = foundry.utils.mergeObject(this.object, newData, { inplace: false });
         //@ts-ignore
         if (this.object.id) {
             TurnAlert.update(finalData);

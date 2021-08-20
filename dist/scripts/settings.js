@@ -1,6 +1,6 @@
-export const TURN_ALERT_MODULE_NAME = "turnAlert";
-export const TURN_ALERT_SOCKET_NAME = "module.turnAlert";
-export const TURN_ALERT_FLAG_ALERTS = "alerts";
+export const TURN_ALERT_MODULE_NAME = 'turnAlert';
+export const TURN_ALERT_SOCKET_NAME = 'module.turnAlert';
+export const TURN_ALERT_FLAG_ALERTS = 'alerts';
 /**
  * Because typescript doesn't know when in the lifecycle of foundry your code runs, we have to assume that the
  * canvas is potentially not yet initialized, so it's typed as declare let canvas: Canvas | {ready: false}.
@@ -12,7 +12,7 @@ export const TURN_ALERT_FLAG_ALERTS = "alerts";
  */
 export function getCanvas() {
     if (!(canvas instanceof Canvas) || !canvas.ready) {
-        throw new Error("Canvas Is Not Initialized");
+        throw new Error('Canvas Is Not Initialized');
     }
     return canvas;
 }
@@ -27,9 +27,8 @@ export function getCanvas() {
  */
 export function getGame() {
     if (!(game instanceof Game)) {
-        throw new Error("Game Is Not Initialized");
+        throw new Error('Game Is Not Initialized');
     }
     return game;
 }
-export const registerSettings = function () {
-};
+export const registerSettings = function () { };

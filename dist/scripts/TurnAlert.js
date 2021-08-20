@@ -1,6 +1,6 @@
-import { error, log } from "../turn-alert.js";
-import { getCanvas, getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from "./settings.js";
-import { compareTurns } from "./utils.js";
+import { error, log } from '../turn-alert.js';
+import { getCanvas, getGame, TURN_ALERT_FLAG_ALERTS, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME, } from './settings.js';
+import { compareTurns } from './utils.js';
 /**
  * Data structure schema:
  * {
@@ -136,16 +136,16 @@ export default class TurnAlert {
     }
     static _customExecute(alert, macro) {
         // Chat macros
-        if (macro.data.type === "chat") {
+        if (macro.data.type === 'chat') {
             //@ts-ignore
             ui.chat?.processMessage(macro.data.command).catch((err) => {
-                ui.notifications?.error("There was an error in your chat message syntax.");
+                ui.notifications?.error('There was an error in your chat message syntax.');
                 error(err);
             });
         }
         // Script macros
-        else if (macro.data.type === "script") {
-            if (!getGame().user?.can("MACRO_SCRIPT")) {
+        else if (macro.data.type === 'script') {
+            if (!getGame().user?.can('MACRO_SCRIPT')) {
                 return ui.notifications?.warn(`You are not allowed to use JavaScript macros.`);
             }
             const turn = this.getCombat(alert)?.turns.find((t) => t.id === alert.turnId);
@@ -254,7 +254,7 @@ export default class TurnAlert {
         if (alertData.turnId !== null && TurnAlert.getTurnIndex(alertData) === -1) {
             throw new Error(`The provided turnId ("${alertData.turnId}") does not match any combatants in combat "${alertData.combatId}"`);
         }
-        if (combat.canUserModify(getGame().user, "update")) {
+        if (combat.canUserModify(getGame().user, 'update')) {
             const id = randomID(16);
             alertData.id = id;
             let combatAlerts = combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
@@ -271,7 +271,7 @@ export default class TurnAlert {
         }
         else {
             log(`Turn Alert | User ${getGame().userId} does not have permission to edit combat ${alertData.combatId}; sending createAlert request...`);
-            getGame().socket?.emit(`module.${TURN_ALERT_MODULE_NAME}`, { type: "createAlert", alertData: data });
+            getGame().socket?.emit(`module.${TURN_ALERT_MODULE_NAME}`, { type: 'createAlert', alertData: data });
         }
     }
     /**
@@ -294,10 +294,12 @@ export default class TurnAlert {
         if (!existingData) {
             throw new Error(`Cannot update alert ${data.id} in combat ${data.combatId} because that alert doesn't already exist in that combat.`);
         }
-        if (combat.canUserModify(getGame().user, "update")) {
+        if (combat.canUserModify(getGame().user, 'update')) {
             if (data.repeating) {
                 //@ts-ignore
-                data.repeating = foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
+                data.repeating = (
+                //@ts-ignore
+                foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating));
             }
             alerts[data.id] = foundry.utils.mergeObject(existingData, data);
             await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);
@@ -307,7 +309,7 @@ export default class TurnAlert {
         }
         else {
             log(` User ${getGame().userId} does not have permission to edit combat ${data.combatId}; sending updateAlert request...`);
-            getGame().socket?.emit(TURN_ALERT_SOCKET_NAME, { type: "updateAlert", alertData: data });
+            getGame().socket?.emit(TURN_ALERT_SOCKET_NAME, { type: 'updateAlert', alertData: data });
         }
     }
     /**
@@ -320,7 +322,7 @@ export default class TurnAlert {
         if (!combat) {
             throw new Error(`The combat "${combatId}" does not exist.`);
         }
-        if (combat.canUserModify(getGame().user, "update")) {
+        if (combat.canUserModify(getGame().user, 'update')) {
             const alerts = combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS) || {};
             if (!(alertId in alerts)) {
                 throw new Error(`The alert "${alertId}" does not exist in combat "${combatId}".`);
@@ -333,7 +335,7 @@ export default class TurnAlert {
         }
         else {
             log(` User ${getGame().userId} does not have permission to edit combat ${combatId}; sending updateAlert request...`);
-            getGame().socket?.emit(TURN_ALERT_SOCKET_NAME, { type: "deleteAlert", combatId, alertId });
+            getGame().socket?.emit(TURN_ALERT_SOCKET_NAME, { type: 'deleteAlert', combatId, alertId });
         }
     }
 }
