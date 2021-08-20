@@ -4,7 +4,7 @@ import TurnAlert from "./TurnAlert.js";
 import TurnAlertConfig from './apps/TurnAlertConfig.js';
 import { getGame, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from './settings.js';
 import { i18n, warn } from '../turn-alert.js';
-export let readyHooks = async () => {
+export const readyHooks = async () => {
     Hooks.on('preUpdateCombat', handlePreUpdateCombat);
     Hooks.on('updateCombat', handleUpdateCombat);
     Hooks.on('renderCombatTracker', (tracker, html, data) => {
@@ -27,8 +27,10 @@ export const setupHooks = async () => {
 };
 export const initHooks = () => {
     warn('Init Hooks processing');
-    globalThis.TurnAlert = TurnAlert;
-    globalThis.TurnAlertConfig = TurnAlertConfig;
+    //@ts-ignore
+    window.TurnAlert = TurnAlert;
+    //@ts-ignore
+    window.TurnAlertConfig = TurnAlertConfig;
     // patch_CombatTracker_activateListeners();
     // patch_CombatTracker_getEntryContextOptions();
     //@ts-ignore
@@ -55,7 +57,6 @@ export const initHooks = () => {
                 break;
             default:
                 throw new Error(`Turn Alert | Unknown socket payload type: ${payload.type} | payload contents:\n${JSON.stringify(payload)}`);
-                break;
         }
     });
 };

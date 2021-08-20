@@ -31,4 +31,4 @@ export function getGame() {
     }
     return game;
 }
-export const registerSettings = function () { };
+// export const registerSettings = function () {};

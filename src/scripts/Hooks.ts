@@ -5,7 +5,7 @@ import TurnAlertConfig from './apps/TurnAlertConfig.js';
 import { getGame, TURN_ALERT_MODULE_NAME, TURN_ALERT_SOCKET_NAME } from './settings.js';
 import { i18n, warn } from '../turn-alert.js';
 
-export let readyHooks = async () => {
+export const readyHooks = async () => {
   Hooks.on('preUpdateCombat', handlePreUpdateCombat);
   Hooks.on('updateCombat', handleUpdateCombat);
 
@@ -33,26 +33,18 @@ export const setupHooks = async () => {
 export const initHooks = () => {
   warn('Init Hooks processing');
 
-  globalThis.TurnAlert = TurnAlert;
-  globalThis.TurnAlertConfig = TurnAlertConfig;
+  //@ts-ignore
+  window.TurnAlert = TurnAlert;
+  //@ts-ignore
+  window.TurnAlertConfig = TurnAlertConfig;
 
   // patch_CombatTracker_activateListeners();
   // patch_CombatTracker_getEntryContextOptions();
 
   //@ts-ignore
-  libWrapper.register(
-    TURN_ALERT_MODULE_NAME,
-    'CombatTracker.prototype.activateListeners',
-    CombatTrackerPrototypeActivateListenersHandler,
-    'MIXED',
-  );
+  libWrapper.register(TURN_ALERT_MODULE_NAME,'CombatTracker.prototype.activateListeners',CombatTrackerPrototypeActivateListenersHandler,'MIXED',);
   //@ts-ignore
-  libWrapper.register(
-    TURN_ALERT_MODULE_NAME,
-    'CombatTracker.prototype._getEntryContextOptions',
-    CombatTrackerPrototypeGetEntryContextOptionsHandler,
-    'MIXED',
-  );
+  libWrapper.register(TURN_ALERT_MODULE_NAME,'CombatTracker.prototype._getEntryContextOptions',CombatTrackerPrototypeGetEntryContextOptionsHandler,'MIXED',);
 
   getGame().socket?.on(TURN_ALERT_SOCKET_NAME, async (payload) => {
     const firstGm = getGame().users?.find((u) => u.isGM && u.active);
@@ -73,7 +65,6 @@ export const initHooks = () => {
         throw new Error(
           `Turn Alert | Unknown socket payload type: ${payload.type} | payload contents:\n${JSON.stringify(payload)}`,
         );
-        break;
     }
   });
 };

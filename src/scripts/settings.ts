@@ -38,4 +38,4 @@ export function getGame(): Game {
   return game;
 }
 
-export const registerSettings = function () {};
+// export const registerSettings = function () {};
