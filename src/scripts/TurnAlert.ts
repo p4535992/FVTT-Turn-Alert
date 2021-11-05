@@ -370,10 +370,9 @@ export default class TurnAlert {
     if (combat.canUserModify(<User>getGame().user, 'update')) {
       if (data.repeating) {
         //@ts-ignore
-        data.repeating = <TurnAlertRepeating>(
-          //@ts-ignore
-          foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating)
-        );
+        data.repeating = <
+          TurnAlertRepeating //@ts-ignore
+        >foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
       }
 
       alerts[data.id] = foundry.utils.mergeObject(existingData, data);

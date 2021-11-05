@@ -42,9 +42,19 @@ export const initHooks = () => {
   // patch_CombatTracker_getEntryContextOptions();
 
   //@ts-ignore
-  libWrapper.register(TURN_ALERT_MODULE_NAME,'CombatTracker.prototype.activateListeners',CombatTrackerPrototypeActivateListenersHandler,'MIXED',);
+  libWrapper.register(
+    TURN_ALERT_MODULE_NAME,
+    'CombatTracker.prototype.activateListeners',
+    CombatTrackerPrototypeActivateListenersHandler,
+    'MIXED',
+  );
   //@ts-ignore
-  libWrapper.register(TURN_ALERT_MODULE_NAME,'CombatTracker.prototype._getEntryContextOptions',CombatTrackerPrototypeGetEntryContextOptionsHandler,'MIXED',);
+  libWrapper.register(
+    TURN_ALERT_MODULE_NAME,
+    'CombatTracker.prototype._getEntryContextOptions',
+    CombatTrackerPrototypeGetEntryContextOptionsHandler,
+    'MIXED',
+  );
 
   getGame().socket?.on(TURN_ALERT_SOCKET_NAME, async (payload) => {
     const firstGm = getGame().users?.find((u) => u.isGM && u.active);

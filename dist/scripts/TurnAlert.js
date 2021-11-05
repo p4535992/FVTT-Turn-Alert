@@ -297,9 +297,7 @@ export default class TurnAlert {
         if (combat.canUserModify(getGame().user, 'update')) {
             if (data.repeating) {
                 //@ts-ignore
-                data.repeating = (
-                //@ts-ignore
-                foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating));
+                data.repeating = foundry.utils.mergeObject(this.prototype.constructor.defaultRepeatingData, data.repeating);
             }
             alerts[data.id] = foundry.utils.mergeObject(existingData, data);
             await combat.unsetFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS);

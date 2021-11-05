@@ -80,9 +80,11 @@ Hooks.once('setup', function () {
 /* ------------------------------------ */
 Hooks.once('ready', () => {
   // Do anything once the module is ready
-  if (!getGame().modules.get("lib-wrapper")?.active && getGame().user?.isGM){
-  	ui.notifications?.error(`The '${TURN_ALERT_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`);
-  	return;
+  if (!getGame().modules.get('lib-wrapper')?.active && getGame().user?.isGM) {
+    ui.notifications?.error(
+      `The '${TURN_ALERT_MODULE_NAME}' module requires to install and activate the 'libWrapper' module.`,
+    );
+    return;
   }
 
   readyHooks();
