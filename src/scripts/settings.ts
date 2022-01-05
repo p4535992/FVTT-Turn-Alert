@@ -1,9 +1,6 @@
-//@ts-ignore
-import { DND5E } from '../../../systems/dnd5e/module/config.js';
+export const TURN_ALERT_MODULE_NAME = 'turn-alert';
 
-export const TURN_ALERT_MODULE_NAME = 'turnAlert';
-
-export const TURN_ALERT_SOCKET_NAME = 'module.turnAlert';
+export const TURN_ALERT_SOCKET_NAME = 'module.turn-alert';
 
 export const TURN_ALERT_FLAG_ALERTS = 'alerts';
 
@@ -38,4 +35,13 @@ export function getGame(): Game {
   return game;
 }
 
-// export const registerSettings = function () {};
+export const registerSettings = function () {
+  getGame().settings.register(TURN_ALERT_MODULE_NAME, 'allowPlayerToCreateAlerts', {
+    name: `${TURN_ALERT_MODULE_NAME}.settings.allowPlayerToCreateAlerts.name`,
+    hint: `${TURN_ALERT_MODULE_NAME}.settings.allowPlayerToCreateAlerts.hint`,
+    scope: 'world',
+    config: false,
+    type: Boolean,
+    default: false,
+  });
+};

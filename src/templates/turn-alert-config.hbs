@@ -2,9 +2,9 @@
     <div>
         <div>
             {{#if topOfRound}}
-            <p>{{localize 'turnAlert.APP.TriggerOnTopOfRound'}}</p>
+            <p>{{localize 'turn-alert.APP.TriggerOnTopOfRound'}}</p>
             {{else}}
-            <p>{{localize 'turnAlert.APP.TriggerOnTurn'}}</p>
+            <p>{{localize 'turn-alert.APP.TriggerOnTurn'}}</p>
             <div class="turn-display flexrow">
                 <img src="{{turnData.imgPath}}">
                 <div class="token-name flexcol">
@@ -19,9 +19,9 @@
         <hr>
         <div>
             <div class="form-group">
-                <label for="label">{{localize 'turnAlert.APP.AlertLabel'}}</label>
+                <label for="label">{{localize 'turn-alert.APP.AlertLabel'}}</label>
                 <input id="label" type="text" name="label" value="{{object.label}}" data-dtype="String">
-                <p class="notes">{{localize 'turnAlert.APP.AlertLabelHint'}}</p>
+                <p class="notes">{{localize 'turn-alert.APP.AlertLabelHint'}}</p>
             </div>
         </div>
         <hr>
@@ -31,23 +31,23 @@
                 <input id="round" type="text" name="round" value="{{object.round}}" data-dtype="Number">
             </div>
             <p id="validRoundWarning" style="display: none" class="notes warning">
-                {{localize 'turnAlert.APP.ValidRoundWarning'}}
+                {{localize 'turn-alert.APP.ValidRoundWarning'}}
             </p>
 
             <div class="form-group">
-                <label for="roundAbsolute">{{localize 'turnAlert.APP.AbsoluteRound'}}</label>
+                <label for="roundAbsolute">{{localize 'turn-alert.APP.AbsoluteRound'}}</label>
                 <input type="checkbox" name="roundAbsolute" data-dtype="Boolean" {{checked object.roundAbsolute}}>
             </div>
 
             <div class="form-group">
-                <label for="repeatingToggle">{{localize 'turnAlert.APP.Repeating'}}</label>
+                <label for="repeatingToggle">{{localize 'turn-alert.APP.Repeating'}}</label>
                 <input type="checkbox" id="repeatingToggle" name="repeatingToggle" data-dtype="Boolean"
                     {{checked repeating}}>
             </div>
 
             <div id="repeatingParams" class="indented" style="{{#unless repeating}}display:none{{/unless}}">
                 <div class="form-group">
-                    <label for="repeatFrequency">{{localize 'turnAlert.APP.RepeatFrequency'}}</label>
+                    <label for="repeatFrequency">{{localize 'turn-alert.APP.RepeatFrequency'}}</label>
                     <input id="frequency" type="text" name="repeatFrequency" value="{{object.repeating.frequency}}"
                         data-dtype="Number">
                 </div>
@@ -57,7 +57,7 @@
                         data-dtype="Number">
                 </div>
                 <div class="form-group">
-                    <label for="repeatExpireAbsolute">{{localize 'turnAlert.APP.RepeatExpireAbsolute'}}</label>
+                    <label for="repeatExpireAbsolute">{{localize 'turn-alert.APP.RepeatExpireAbsolute'}}</label>
                     <input type="checkbox" name="repeatExpireAbsolute" value="{{object.repeating.expireAbsolute}}"
                         data-dtype="Boolean">
                 </div>
@@ -65,7 +65,7 @@
 
             {{#unless topOfRound}}
             <div class="form-group">
-                <label for="endOfTurn">{{localize 'turnAlert.APP.TriggerEndOfTurn'}}</label>
+                <label for="endOfTurn">{{localize 'turn-alert.APP.TriggerEndOfTurn'}}</label>
                 <input id="endOfTurn" type="checkbox" name="endOfTurn" data-dtype="Boolean"
                     {{checked object.endOfTurn}}>
             </div>
@@ -74,15 +74,15 @@
         </div>
         <hr>
         <div class="message-area">
-            <label for="message"><i class="fas fa-comments"></i> {{localize 'turnAlert.APP.ChatMessage'}}</label>
+            <label for="message"><i class="fas fa-comments"></i> {{localize 'turn-alert.APP.ChatMessage'}}</label>
             <div class="form-group">
                 <textarea name="message"
-                    placeholder="{{localize 'turnAlert.APP.ChatMessagePlaceholder'}}">{{object.message}}</textarea>
+                    placeholder="{{localize 'turn-alert.APP.ChatMessagePlaceholder'}}">{{object.message}}</textarea>
             </div>
             <div style="margin-top: 5px;">
                 <label for="recipients"><i class="fas fa-user-secret"></i>
-                    {{localize 'turnAlert.APP.WhisperTo'}}</label>
-                <p class="notes">{{localize 'turnAlert.APP.WhisperToHint'}}</p>
+                    {{localize 'turn-alert.APP.WhisperTo'}}</label>
+                <p class="notes">{{localize 'turn-alert.APP.WhisperToHint'}}</p>
                 <div class="form-group">
                     <select multiple id="recipients" name="recipients" size="{{userCount}}" class="self-height">
                         {{#each users}}
@@ -95,11 +95,11 @@
 
         <hr>
         <div class="form-group">
-            <label for="macro"><i class="fas fa-terminal"></i> {{localize 'turnAlert.APP.MacroLabel'}}</label>
+            <label for="macro"><i class="fas fa-terminal"></i> {{localize 'turn-alert.APP.MacroLabel'}}</label>
             <input type="text" name="macro" value="{{object.macro}}">
-            <p class="notes">{{localize 'turnAlert.APP.MacroHint'}}</p>
+            <p class="notes">{{localize 'turn-alert.APP.MacroHint'}}</p>
             <p id="macroWarning" class="notes warning" style="display: none;">
-                {{localize 'turnAlert.APP.MacroInvalid'}}
+                {{localize 'turn-alert.APP.MacroInvalid'}}
             </p>
         </div>
 

@@ -1,5 +1,7 @@
 {
-  "turnAlert": {
+  "turn-alert": {
+    "settings.allowPlayerToCreateAlerts.name": "Allow all players with permission below Assistant GM to create alerts",
+    "settings.allowPlayerToCreateAlerts.hint": " ",
     "APP": {
       "AbsoluteRound": "Absolute round number",
       "AddAlert": "Add Alert",

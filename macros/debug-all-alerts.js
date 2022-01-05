@@ -3,7 +3,7 @@ function main() {
         ui.notifications.error("There is no currently active combat.");
         return;
     }
-    const alerts = game.combat?.data?.flags?.turnAlert?.alerts;
+    const alerts = game.combat?.data?.flags?.turn-alert?.alerts;
 
     if (!alerts || alerts.length === 0) {
         ui.notifications.error("There are no alerts on the currently active combat.");

@@ -3,16 +3,16 @@
 
         <div class="cn-header flexrow">
             <div class="cn-current-turn">
-                <label for="currentRound">{{localize 'turnAlert.APP.CurrentRound'}}:</label>
+                <label for="currentRound">{{localize 'turn-alert.APP.CurrentRound'}}:</label>
                 <input name="currentRound" type="text" value="{{currentRound}}" disabled>
-                <label for="currentTurn">{{localize 'turnAlert.APP.CurrentTurn'}}:</label>
+                <label for="currentTurn">{{localize 'turn-alert.APP.CurrentTurn'}}:</label>
                 <input name="currentTurn" type="text" value="{{currentTurn}}" disabled>
-                <label for="currentInitiative">{{localize 'turnAlert.APP.CurrentInitiative'}}:</label>
+                <label for="currentInitiative">{{localize 'turn-alert.APP.CurrentInitiative'}}:</label>
                 <input name="currentInitiative" type="text" value="{{currentInitiative}}" disabled>
             </div>
             <div>
                 <button id="cn-delete-all" style="white-space: nowrap;"><i class="fas fa-trash"></i>
-                    {{localize 'turnAlert.APP.DeleteAll'}}</button>
+                    {{localize 'turn-alert.APP.DeleteAll'}}</button>
             </div>
         </div>
 
@@ -33,7 +33,7 @@
                 </div>
                 {{/if}}
                 <div class="add-button-container">
-                    <button class="add-alert-button" title="{{localize 'turnAlert.APP.AddAlert'}}"
+                    <button class="add-alert-button" title="{{localize 'turn-alert.APP.AddAlert'}}"
                         data-turnid="{{this.id}}">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -46,7 +46,7 @@
                     <i class="icon far fa-bell"></i>
                     <span class="separator"></span>
                     <span class="tag round-number" title="{{localize this.roundTitle num=this.round}}">
-                        {{localize 'turnAlert.APP.RoundNum' num=this.round}}
+                        {{localize 'turn-alert.APP.RoundNum' num=this.round}}
                         <i class="fas fa-{{this.roundIcon}}"></i>
                     </span>
 
@@ -56,12 +56,12 @@
                     {{/if}}
 
                     {{#if this.message}}
-                    <span class="tag message" title="{{localize 'turnAlert.APP.ChatMessage'}}: {{this.message}}"><i
+                    <span class="tag message" title="{{localize 'turn-alert.APP.ChatMessage'}}: {{this.message}}"><i
                             class="fas fa-comments"></i></span>
                     {{/if}}
 
                     {{#if this.recipientNames}}
-                    <span class="tag message" title="{{localize 'turnAlert.APP.WhisperTo'}}: {{this.recipientNames}}"><i
+                    <span class="tag message" title="{{localize 'turn-alert.APP.WhisperTo'}}: {{this.recipientNames}}"><i
                             class="fas fa-user-secret"></i></span>
                     {{/if}}
 
@@ -70,13 +70,13 @@
                     {{/if}}
 
                     <span class="separator"></span>
-                    <span class="alert-label" title="{{localize 'turnAlert.APP.AlertLabel'}}">{{{this.label}}}</span>
+                    <span class="alert-label" title="{{localize 'turn-alert.APP.AlertLabel'}}">{{{this.label}}}</span>
                     <span class="separator"></span>
-                    <button class="edit-alert-button" title="{{localize 'turnAlert.APP.EditAlert'}}"
+                    <button class="edit-alert-button" title="{{localize 'turn-alert.APP.EditAlert'}}"
                         data-id="{{this.id}}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="delete-alert-button" title="{{localize 'turnAlert.APP.DeleteAlert'}}"
+                    <button class="delete-alert-button" title="{{localize 'turn-alert.APP.DeleteAlert'}}"
                         data-id="{{this.id}}">
                         <i class="fas fa-trash"></i>
                     </button>

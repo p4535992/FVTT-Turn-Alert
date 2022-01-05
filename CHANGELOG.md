@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [2.0.2] 
+
+## [2.0.1] 2021-12-19
+
+- Fixed issue preventing all players with permission below `Assistant GM` to create alerts
+
 ## [2.0.0] 2021-06-11
 
 *Core 0.8 compatibility*

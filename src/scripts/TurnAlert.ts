@@ -6,6 +6,7 @@ import {
   TURN_ALERT_MODULE_NAME,
   TURN_ALERT_SOCKET_NAME,
 } from './settings.js';
+import { canUserModifyCombat } from './TurnAlertHelper.js';
 import { TurnAlertRepeating } from './TurnAlertModels.js';
 import { compareTurns } from './utils.js';
 
@@ -203,7 +204,7 @@ export default class TurnAlert {
       }
       const turn = <Combatant>this.getCombat(alert)?.turns.find((t) => t.id === alert.turnId);
       const token = <Token>getCanvas().tokens?.get(<string>turn?.data.tokenId);
-      const speaker = ChatMessage.getSpeaker({ token });
+      const speaker = ChatMessage.getSpeaker({ token: token.document });
       const actor = getGame().actors?.get(<string>speaker.actor);
       const character = getGame().user?.character;
       const args = alert.args;
@@ -224,7 +225,7 @@ export default class TurnAlert {
     if (!combat) {
       throw new Error(`No combat exists with ID ${combatId}`);
     }
-    return <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS); //combat.data.flags.turnAlert?.alerts;
+    return <TurnAlert[]>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS); //combat.data.flags.turn-alert?.alerts;
   }
 
   /**
@@ -315,7 +316,7 @@ export default class TurnAlert {
       );
     }
 
-    if (combat.canUserModify(<User>getGame().user, 'update')) {
+    if (canUserModifyCombat(combat)) {
       const id = randomID(16);
       alertData.id = id;
 
@@ -367,7 +368,7 @@ export default class TurnAlert {
       );
     }
 
-    if (combat.canUserModify(<User>getGame().user, 'update')) {
+    if (canUserModifyCombat(combat)) {
       if (data.repeating) {
         //@ts-ignore
         data.repeating = <
@@ -403,7 +404,7 @@ export default class TurnAlert {
       throw new Error(`The combat "${combatId}" does not exist.`);
     }
 
-    if (combat.canUserModify(<User>getGame().user, 'update')) {
+    if (canUserModifyCombat(combat)) {
       const alerts = <TurnAlert>combat.getFlag(TURN_ALERT_MODULE_NAME, TURN_ALERT_FLAG_ALERTS) || {};
 
       if (!(alertId in alerts)) {

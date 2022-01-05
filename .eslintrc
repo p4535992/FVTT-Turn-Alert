@@ -10,10 +10,7 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2020,
-        "sourceType": "module",
-        "ecmaFeatures": {
-            "jsx": false
-        }
+        "sourceType": "module"
     },
     "extends": [
         "eslint:recommended",
@@ -33,7 +30,7 @@
             "off",
             {},
             {
-              "usePrettierrc": true,
+              "usePrettierrc": true
             }
         ],
         "no-underscore-dangle": "off",
@@ -46,6 +43,6 @@
         ],
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/ban-ts-comment": "off",
-        "no-shadow": ["off", { "builtinGlobals": true, "hoist": "all", "allow": ["event"] }]
+        "no-shadow": ["warn", { "builtinGlobals": true, "hoist": "all", "allow": ["event"] }]
     }
 }
